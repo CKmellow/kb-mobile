@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/colors.dart';
 import '../../core/constants/typography.dart';
+import '../services/send_money/send_money_view.dart';
 
 // Transaction Item Widget
 class _TransactionItem extends StatelessWidget {
@@ -364,23 +365,180 @@ class _HomeViewState extends State<HomeView> {
                         childAspectRatio: 1.7,
                         children: [
                           _QuickAction(
-                            icon: Icons.send,
-                            label: 'Send Money',
-                            onTap: () {},
+                            icon: Icons.send, // Send
+                            label: 'Send',
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(24),
+                                  ),
+                                ),
+                                builder: (context) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 24,
+                                      horizontal: 16,
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Send',
+                                          style: TextStyle(
+                                            fontFamily:
+                                                AppTypography.fontFamily,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        ListTile(
+                                          leading: const Icon(
+                                            Icons.phone_android,
+                                          ),
+                                          title: const Text('Send to M-Pesa'),
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SendMoneyView(),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        ListTile(
+                                          leading: const Icon(
+                                            Icons.account_balance,
+                                          ),
+                                          title: const Text(
+                                            'Send via PesaLink',
+                                          ),
+                                          onTap: () {},
+                                        ),
+                                        ListTile(
+                                          leading: const Icon(
+                                            Icons.account_balance_wallet,
+                                          ),
+                                          title: const Text(
+                                            'Send to Own Account',
+                                          ),
+                                          onTap: () {},
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           ),
                           _QuickAction(
-                            icon: Icons.receipt_long,
-                            label: 'Pay Bills',
-                            onTap: () {},
+                            icon: Icons.receipt, // Pay
+                            label: 'Pay',
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(24),
+                                  ),
+                                ),
+                                builder: (context) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 24,
+                                      horizontal: 16,
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Pay',
+                                          style: TextStyle(
+                                            fontFamily:
+                                                AppTypography.fontFamily,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        ListTile(
+                                          leading: const Icon(
+                                            Icons.account_balance,
+                                          ),
+                                          title: const Text('KRA Payments'),
+                                          onTap: () {},
+                                        ),
+                                        ListTile(
+                                          leading: const Icon(
+                                            Icons.phone_android,
+                                          ),
+                                          title: const Text('Airtime'),
+                                          onTap: () {},
+                                        ),
+                                        ListTile(
+                                          leading: const Icon(Icons.tv),
+                                          title: const Text('DSTV'),
+                                          onTap: () {},
+                                        ),
+                                        ListTile(
+                                          leading: const Icon(Icons.wifi),
+                                          title: const Text('Zuku'),
+                                          onTap: () {},
+                                        ),
+                                        ListTile(
+                                          leading: const Icon(Icons.tv),
+                                          title: const Text('GoTV'),
+                                          onTap: () {},
+                                        ),
+                                        ListTile(
+                                          leading: const Icon(Icons.water_drop),
+                                          title: const Text('Nairobi Water'),
+                                          onTap: () {},
+                                        ),
+                                        ListTile(
+                                          leading: const Icon(
+                                            Icons.phone_iphone,
+                                          ),
+                                          title: const Text('Airtel Postpaid'),
+                                          onTap: () {},
+                                        ),
+                                        ListTile(
+                                          leading: const Icon(Icons.flash_on),
+                                          title: const Text('Kenya Power'),
+                                          onTap: () {},
+                                        ),
+                                        ListTile(
+                                          leading: const Icon(Icons.school),
+                                          title: const Text('School Fees'),
+                                          onTap: () {},
+                                        ),
+                                        ListTile(
+                                          leading: const Icon(Icons.church),
+                                          title: const Text('Church Payments'),
+                                          onTap: () {},
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           ),
                           _QuickAction(
-                            icon: Icons.smartphone,
+                            icon: Icons.phone_iphone, // Buy Airtime
                             label: 'Buy Airtime',
                             onTap: () {},
                           ),
                           _QuickAction(
-                            icon: Icons.more_horiz,
-                            label: 'More',
+                            icon: Icons.repeat, // Standing order
+                            label: 'Standing order',
                             onTap: () {},
                             highlight: true,
                           ),
