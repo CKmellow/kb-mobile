@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/colors.dart';
 import '../../core/constants/typography.dart';
-import '../services/send_money/send_money_view.dart';
+import '../services/send/send_money/send_money_view.dart';
+import 'components/send_menu_sheet.dart';
+import 'components/pay_menu_sheet.dart';
+import '../transactions/transaction_history_page.dart';
+import '../deposit/deposit_page.dart';
+import '../services/airtime/buy_airtime_view.dart';
+import '../services/StandingOrder/home/standing_order_home_view.dart';
 
 // Transaction Item Widget
 class _TransactionItem extends StatelessWidget {
@@ -272,7 +278,14 @@ class _HomeViewState extends State<HomeView> {
                                   children: [
                                     Expanded(
                                       child: ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const TransactionHistoryPage(),
+                                            ),
+                                          );
+                                        },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: primary,
                                           foregroundColor: cardDark,
@@ -295,7 +308,14 @@ class _HomeViewState extends State<HomeView> {
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: OutlinedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const DepositPage(),
+                                            ),
+                                          );
+                                        },
                                         style: OutlinedButton.styleFrom(
                                           side: BorderSide(color: primary),
                                           foregroundColor: primary,
@@ -375,64 +395,7 @@ class _HomeViewState extends State<HomeView> {
                                     top: Radius.circular(24),
                                   ),
                                 ),
-                                builder: (context) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 24,
-                                      horizontal: 16,
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Send',
-                                          style: TextStyle(
-                                            fontFamily:
-                                                AppTypography.fontFamily,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 16),
-                                        ListTile(
-                                          leading: const Icon(
-                                            Icons.phone_android,
-                                          ),
-                                          title: const Text('Send to M-Pesa'),
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const SendMoneyView(),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(
-                                            Icons.account_balance,
-                                          ),
-                                          title: const Text(
-                                            'Send via PesaLink',
-                                          ),
-                                          onTap: () {},
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(
-                                            Icons.account_balance_wallet,
-                                          ),
-                                          title: const Text(
-                                            'Send to Own Account',
-                                          ),
-                                          onTap: () {},
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
+                                builder: (context) => const SendMenuSheet(),
                               );
                             },
                           ),
@@ -440,106 +403,35 @@ class _HomeViewState extends State<HomeView> {
                             icon: Icons.receipt, // Pay
                             label: 'Pay',
                             onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(24),
-                                  ),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const PayBillsPage(),
                                 ),
-                                builder: (context) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 24,
-                                      horizontal: 16,
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Pay',
-                                          style: TextStyle(
-                                            fontFamily:
-                                                AppTypography.fontFamily,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 16),
-                                        ListTile(
-                                          leading: const Icon(
-                                            Icons.account_balance,
-                                          ),
-                                          title: const Text('KRA Payments'),
-                                          onTap: () {},
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(
-                                            Icons.phone_android,
-                                          ),
-                                          title: const Text('Airtime'),
-                                          onTap: () {},
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(Icons.tv),
-                                          title: const Text('DSTV'),
-                                          onTap: () {},
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(Icons.wifi),
-                                          title: const Text('Zuku'),
-                                          onTap: () {},
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(Icons.tv),
-                                          title: const Text('GoTV'),
-                                          onTap: () {},
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(Icons.water_drop),
-                                          title: const Text('Nairobi Water'),
-                                          onTap: () {},
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(
-                                            Icons.phone_iphone,
-                                          ),
-                                          title: const Text('Airtel Postpaid'),
-                                          onTap: () {},
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(Icons.flash_on),
-                                          title: const Text('Kenya Power'),
-                                          onTap: () {},
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(Icons.school),
-                                          title: const Text('School Fees'),
-                                          onTap: () {},
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(Icons.church),
-                                          title: const Text('Church Payments'),
-                                          onTap: () {},
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
                               );
                             },
                           ),
                           _QuickAction(
                             icon: Icons.phone_iphone, // Buy Airtime
                             label: 'Buy Airtime',
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const BuyAirtimeView(),
+                                ),
+                              );
+                            },
                           ),
                           _QuickAction(
                             icon: Icons.repeat, // Standing order
                             label: 'Standing order',
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const StandingOrderHomeView(),
+                                ),
+                              );
+                            },
                             highlight: true,
                           ),
                         ],
@@ -563,7 +455,14 @@ class _HomeViewState extends State<HomeView> {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const TransactionHistoryPage(),
+                                ),
+                              );
+                            },
                             style: TextButton.styleFrom(
                               foregroundColor: primary,
                               textStyle: const TextStyle(
@@ -643,13 +542,13 @@ class _HomeViewState extends State<HomeView> {
               onTap: () {},
               primary: primary,
             ),
-            _NavButton(
-              icon: Icons.credit_card,
-              label: 'Cards',
-              active: false,
-              onTap: () {},
-              primary: primary,
-            ),
+            // _NavButton(
+            //   icon: Icons.credit_card,
+            //   label: 'Cards',
+            //   active: false,
+            //   onTap: () {},
+            //   primary: primary,
+            // ),
             _NavButton(
               icon: Icons.miscellaneous_services,
               label: 'Services',

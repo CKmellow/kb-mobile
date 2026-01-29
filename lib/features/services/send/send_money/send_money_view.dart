@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../core/constants/colors.dart';
-import '../../../core/constants/typography.dart';
-import '../../confirmation/confirm_transfer_view.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/typography.dart';
+import '../../../confirmation/confirm_transfer_view.dart';
 
 class SendMoneyView extends StatefulWidget {
   const SendMoneyView({Key? key}) : super(key: key);
@@ -16,6 +16,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   String? selectedAccount = 'Main Account (**** 8976) - KES 145,200.50';
   final TextEditingController amountController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController otherNumberController = TextEditingController();
 
   final List<String> accounts = [
     'Main Account (**** 8976) - KES 145,200.50',
@@ -28,6 +29,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   void dispose() {
     amountController.dispose();
     descriptionController.dispose();
+    otherNumberController.dispose();
     super.dispose();
   }
 
@@ -94,6 +96,50 @@ class _SendMoneyViewState extends State<SendMoneyView> {
                   ),
                 ],
               ),
+              if (selectedRecipient == 1) ...[
+                const SizedBox(height: 20),
+                Text(
+                  'Enter Other Number',
+                  style: TextStyle(
+                    fontFamily: AppTypography.fontFamily,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    color: isDark ? Colors.grey[400] : Colors.grey[500],
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: otherNumberController,
+                  keyboardType: TextInputType.phone,
+                  style: TextStyle(
+                    fontFamily: AppTypography.fontFamily,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: isDark ? Colors.white : cardDark,
+                  ),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: isDark ? Colors.grey[900] : Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: isDark
+                            ? Colors.grey[800]!
+                            : const Color(0xFFE5E7EB),
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 16,
+                    ),
+                    hintText: 'Enter phone number',
+                    hintStyle: TextStyle(
+                      color: isDark ? Colors.grey[700] : Colors.grey[400],
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 24),
               // Source Account
               Text(
