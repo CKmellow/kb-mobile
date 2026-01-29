@@ -117,6 +117,34 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   bool _balanceVisible = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _goToPreviousPage() {
+    if (_currentPage > 0) {
+      _pageController.animateToPage(
+        _currentPage - 1,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _goToNextPage() {
+    if (_currentPage < 2) {
+      _pageController.animateToPage(
+        _currentPage + 1,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,10 +153,7 @@ class _HomeViewState extends State<HomeView> {
     final bgLight = const Color(0xFFF6F8F6);
     final bgDark = const Color(0xFF102210);
     final cardDark = const Color(0xFF111811);
-    final borderColor = isDark ? Colors.grey[800]! : const Color(0xFFE5E7EB);
     final userName = "Mike";
-    final accountNumber = "123456789";
-    final balance = "145,200.50";
 
     return Scaffold(
       key: _scaffoldKey,
@@ -204,9 +229,7 @@ class _HomeViewState extends State<HomeView> {
                   const Spacer(),
                   // Notification Bell Icon
                   IconButton(
-                    onPressed: () {
-                      // TODO: Open notifications
-                    },
+                    onPressed: () {},
                     icon: Stack(
                       children: [
                         Icon(
@@ -241,163 +264,131 @@ class _HomeViewState extends State<HomeView> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // Account Card
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: isDark ? Colors.grey[900] : Colors.white,
-                              borderRadius: BorderRadius.circular(24),
-                              border: Border.all(color: borderColor),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.08),
-                                  blurRadius: 24,
-                                  offset: const Offset(0, 8),
-                                ),
-                              ],
-                            ),
-                            padding: const EdgeInsets.all(24),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                    // Account Cards Carousel with Navigation Arrows
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Previous Arrow
+                        IconButton(
+                          onPressed: _currentPage > 0
+                              ? _goToPreviousPage
+                              : null,
+                          icon: Icon(
+                            Icons.chevron_left,
+                            color: _currentPage > 0
+                                ? primary
+                                : Colors.grey[400],
+                            size: 32,
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                        // PageView
+                        Expanded(
+                          child: SizedBox(
+                            height: 220,
+                            child: PageView(
+                              controller: _pageController,
+                              onPageChanged: (page) {
+                                setState(() {
+                                  _currentPage = page;
+                                });
+                              },
                               children: [
-                                Text(
-                                  'Main Account – $accountNumber',
-                                  style: TextStyle(
-                                    fontFamily: AppTypography.fontFamily,
-                                    fontWeight: AppTypography.medium,
-                                    fontSize: 14,
-                                    color: Colors.grey[500],
-                                  ),
+                                _AccountCard(
+                                  accountType: 'Main Account',
+                                  accountNumber: '123456789',
+                                  balance: '145,200.50',
+                                  currency: 'KES',
+                                  gradientColors: isDark
+                                      ? [
+                                          const Color(0xFF1A3A1A),
+                                          const Color(0xFF0D1F0D),
+                                        ]
+                                      : [
+                                          const Color(0xFFE8F5E8),
+                                          const Color(0xFFF0FFF0),
+                                        ],
+                                  cardDark: cardDark,
+                                  primary: primary,
+                                  balanceVisible: _balanceVisible,
+                                  onVisibilityToggle: () {
+                                    setState(() {
+                                      _balanceVisible = !_balanceVisible;
+                                    });
+                                  },
                                 ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      'KES',
-                                      style: TextStyle(
-                                        fontFamily: AppTypography.fontFamily,
-                                        fontWeight: AppTypography.bold,
-                                        fontSize: 20,
-                                        color: Colors.grey[500],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      _balanceVisible ? balance : '••••••',
-                                      key: const ValueKey('balance'),
-                                      style: TextStyle(
-                                        fontFamily: AppTypography.fontFamily,
-                                        fontWeight: AppTypography.bold,
-                                        fontSize: 32,
-                                        color: isDark ? Colors.white : cardDark,
-                                        letterSpacing: -1.5,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    IconButton(
-                                      icon: Icon(
-                                        _balanceVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color: Colors.grey[400],
-                                        size: 28,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _balanceVisible = !_balanceVisible;
-                                        });
-                                      },
-                                    ),
-                                  ],
+                                _AccountCard(
+                                  accountType: 'Savings Account',
+                                  accountNumber: '987654321',
+                                  balance: '52,800.00',
+                                  currency: 'KES',
+                                  gradientColors: isDark
+                                      ? [
+                                          const Color(0xFF1A2A3A),
+                                          const Color(0xFF0D1520),
+                                        ]
+                                      : [
+                                          const Color(0xFFE5F0F5),
+                                          const Color(0xFFF0F8FF),
+                                        ],
+                                  cardDark: cardDark,
+                                  primary: const Color(0xFF2196F3),
+                                  balanceVisible: _balanceVisible,
+                                  onVisibilityToggle: () {
+                                    setState(() {
+                                      _balanceVisible = !_balanceVisible;
+                                    });
+                                  },
                                 ),
-                                const SizedBox(height: 16),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const TransactionHistoryPage(),
-                                            ),
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: primary,
-                                          foregroundColor: cardDark,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              16,
-                                            ),
-                                          ),
-                                          elevation: 2,
-                                        ),
-                                        child: const Text(
-                                          'Statement',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: OutlinedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const DepositPage(),
-                                            ),
-                                          );
-                                        },
-                                        style: OutlinedButton.styleFrom(
-                                          side: BorderSide(color: primary),
-                                          foregroundColor: primary,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              16,
-                                            ),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          'Deposit',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                _AccountCard(
+                                  accountType: 'Fixed Deposit',
+                                  accountNumber: '456789123',
+                                  balance: '500,000.00',
+                                  currency: 'KES',
+                                  gradientColors: isDark
+                                      ? [
+                                          const Color(0xFF3A2A1A),
+                                          const Color(0xFF201510),
+                                        ]
+                                      : [
+                                          const Color(0xFFFFF5E5),
+                                          const Color(0xFFFFF8F0),
+                                        ],
+                                  cardDark: cardDark,
+                                  primary: const Color(0xFFFF9800),
+                                  balanceVisible: _balanceVisible,
+                                  onVisibilityToggle: () {
+                                    setState(() {
+                                      _balanceVisible = !_balanceVisible;
+                                    });
+                                  },
                                 ),
                               ],
                             ),
                           ),
-                          // Decorative circle
-                          Positioned(
-                            right: -48,
-                            top: -48,
-                            child: Container(
-                              width: 160,
-                              height: 160,
-                              decoration: BoxDecoration(
-                                color: primary.withOpacity(0.10),
-                                shape: BoxShape.circle,
-                                // blur effect
-                              ),
-                            ),
+                        ),
+                        // Next Arrow
+                        IconButton(
+                          onPressed: _currentPage < 2 ? _goToNextPage : null,
+                          icon: Icon(
+                            Icons.chevron_right,
+                            color: _currentPage < 2
+                                ? primary
+                                : Colors.grey[400],
+                            size: 32,
                           ),
-                        ],
-                      ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      ],
                     ),
+
+                    // Page Indicator
+                    const SizedBox(height: 16),
+                    _PageIndicator(count: 3, activeIndex: _currentPage),
+
+                    const SizedBox(height: 24),
 
                     // Quick Actions
                     Padding(
@@ -427,7 +418,7 @@ class _HomeViewState extends State<HomeView> {
                         childAspectRatio: 1.7,
                         children: [
                           _QuickAction(
-                            icon: Icons.send, // Send
+                            icon: Icons.send,
                             label: 'Send',
                             onTap: () {
                               showModalBottomSheet(
@@ -442,7 +433,7 @@ class _HomeViewState extends State<HomeView> {
                             },
                           ),
                           _QuickAction(
-                            icon: Icons.receipt, // Pay
+                            icon: Icons.receipt,
                             label: 'Pay',
                             onTap: () {
                               Navigator.of(context).push(
@@ -453,7 +444,7 @@ class _HomeViewState extends State<HomeView> {
                             },
                           ),
                           _QuickAction(
-                            icon: Icons.phone_iphone, // Buy Airtime
+                            icon: Icons.phone_iphone,
                             label: 'Buy Airtime',
                             onTap: () {
                               Navigator.of(context).push(
@@ -464,7 +455,7 @@ class _HomeViewState extends State<HomeView> {
                             },
                           ),
                           _QuickAction(
-                            icon: Icons.repeat, // Standing order
+                            icon: Icons.repeat,
                             label: 'Standing order',
                             onTap: () {
                               Navigator.of(context).push(
@@ -584,13 +575,6 @@ class _HomeViewState extends State<HomeView> {
               onTap: () {},
               primary: primary,
             ),
-            // _NavButton(
-            //   icon: Icons.credit_card,
-            //   label: 'Cards',
-            //   active: false,
-            //   onTap: () {},
-            //   primary: primary,
-            // ),
             _NavButton(
               icon: Icons.miscellaneous_services,
               label: 'Services',
@@ -612,6 +596,215 @@ class _HomeViewState extends State<HomeView> {
               primary: primary,
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// Account Card Widget for Carousel
+class _AccountCard extends StatelessWidget {
+  final String accountType;
+  final String accountNumber;
+  final String balance;
+  final String currency;
+  final List<Color> gradientColors;
+  final Color cardDark;
+  final Color primary;
+  final bool balanceVisible;
+  final VoidCallback onVisibilityToggle;
+
+  const _AccountCard({
+    required this.accountType,
+    required this.accountNumber,
+    required this.balance,
+    required this.currency,
+    required this.gradientColors,
+    required this.cardDark,
+    required this.primary,
+    required this.balanceVisible,
+    required this.onVisibilityToggle,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: gradientColors,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: primary.withOpacity(0.15),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          // Decorative circles
+          Positioned(
+            right: -40,
+            top: -40,
+            child: Container(
+              width: 140,
+              height: 140,
+              decoration: BoxDecoration(
+                color: primary.withOpacity(0.08),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Positioned(
+            left: -20,
+            bottom: -20,
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: primary.withOpacity(0.05),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: primary.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.credit_card, color: primary, size: 14),
+                          const SizedBox(width: 4),
+                          Text(
+                            accountType,
+                            style: TextStyle(
+                              fontFamily: AppTypography.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 11,
+                              color: primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.more_vert, color: cardDark.withOpacity(0.5)),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Account Number',
+                  style: TextStyle(
+                    fontFamily: AppTypography.fontFamily,
+                    fontWeight: AppTypography.medium,
+                    fontSize: 11,
+                    color: cardDark.withOpacity(0.6),
+                  ),
+                ),
+                Text(
+                  accountNumber,
+                  style: TextStyle(
+                    fontFamily: AppTypography.fontFamily,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: cardDark,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      currency,
+                      style: TextStyle(
+                        fontFamily: AppTypography.fontFamily,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: cardDark.withOpacity(0.7),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      balanceVisible ? balance : '••••••',
+                      style: TextStyle(
+                        fontFamily: AppTypography.fontFamily,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 26,
+                        color: cardDark,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: Icon(
+                        balanceVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: cardDark.withOpacity(0.4),
+                        size: 22,
+                      ),
+                      onPressed: onVisibilityToggle,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Page Indicator Widget
+class _PageIndicator extends StatelessWidget {
+  final int count;
+  final int activeIndex;
+
+  const _PageIndicator({
+    required this.count,
+    required this.activeIndex,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = AppColors.primary;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        count,
+        (index) => Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          width: index == activeIndex ? 24 : 8,
+          height: 8,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: index == activeIndex ? primary : primary.withOpacity(0.3),
+          ),
         ),
       ),
     );
