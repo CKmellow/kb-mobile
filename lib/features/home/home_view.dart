@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/colors.dart';
 import '../../core/constants/typography.dart';
-import '../services/send/send_money/send_money_view.dart';
 import 'components/send_menu_sheet.dart';
 import 'components/pay_menu_sheet.dart';
+import 'components/side_menu.dart';
 import '../transactions/transaction_history_page.dart';
 import '../deposit/deposit_page.dart';
 import '../services/airtime/buy_airtime_view.dart';
 import '../services/StandingOrder/home/standing_order_home_view.dart';
+import '../services/menu_services/menu_services_view.dart';
 
 // Transaction Item Widget
 class _TransactionItem extends StatelessWidget {
@@ -115,6 +116,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   bool _balanceVisible = true;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +131,9 @@ class _HomeViewState extends State<HomeView> {
     final balance = "145,200.50";
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: isDark ? bgDark : bgLight,
+      drawer: const SideMenu(),
       body: SafeArea(
         child: Column(
           children: [
@@ -152,18 +156,24 @@ class _HomeViewState extends State<HomeView> {
               ),
               child: Row(
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.grey[700] : Colors.grey[200],
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: primary, width: 2),
-                      image: const DecorationImage(
-                        image: NetworkImage(
-                          'https://lh3.googleusercontent.com/aida-public/AB6AXuCkUYHHL49AAy_siuIFjBsQQx-q2f7VS8jaWC3e_DhNV3uXGXDWNjG6Q2Ouke1Rt_grvszLPUF_C3q8c3_Mp3TqdbjLgwBc87Q7EHIQ90TojiQM6OA_xqsaxFeJNstAD46-ZvMahmcUticWDfxcYjQtYvZ8gDyetdkh-BuQbMSvSIv5N8UcVee_khWQhxYiWGE86WjFI4W6cE9jfb7-ZO24ewFnARijef8yxoqc_P0vmRwD5eTOb6BSEh3WSOAWH4euhWfdsbHC6kC2',
+                  // Profile Avatar - Tappable to open drawer
+                  GestureDetector(
+                    onTap: () {
+                      _scaffoldKey.currentState?.openDrawer();
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.grey[700] : Colors.grey[200],
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: primary, width: 2),
+                        image: const DecorationImage(
+                          image: NetworkImage(
+                            'https://lh3.googleusercontent.com/aida-public/AB6AXuCkUYHHL49AAy_siuIFjBsQQx-q2f7VS8jaWC3e_DhNV3uXGXDWNjG6Q2Ouke1Rt_grvszLPUF_C3q8c3_Mp3TqdbjLgwBc87Q7EHIQ90TojiQM6OA_xqsaxFeJNstAD46-ZvMahmcUticWDfxcYjQtYvZ8gDyetdkh-BuQbMSvSIv5N8UcVee_khWQhxYiWGE86WjFI4W6cE9jfb7-ZO24ewFnARijef8yxoqc_P0vmRwD5eTOb6BSEh3WSOAWH4euhWfdsbHC6kC2',
+                          ),
+                          fit: BoxFit.cover,
                         ),
-                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -190,6 +200,38 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ),
                     ],
+                  ),
+                  const Spacer(),
+                  // Notification Bell Icon
+                  IconButton(
+                    onPressed: () {
+                      // TODO: Open notifications
+                    },
+                    icon: Stack(
+                      children: [
+                        Icon(
+                          Icons.notifications_none,
+                          color: isDark ? Colors.white : cardDark,
+                          size: 28,
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: primary,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isDark ? bgDark : bgLight,
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -553,7 +595,13 @@ class _HomeViewState extends State<HomeView> {
               icon: Icons.miscellaneous_services,
               label: 'Services',
               active: false,
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const MenuServicesView(),
+                  ),
+                );
+              },
               primary: primary,
             ),
             _NavButton(
