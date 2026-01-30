@@ -6,9 +6,9 @@ import 'components/pay_menu_sheet.dart';
 import 'components/side_menu.dart';
 import '../transactions/transaction_history_page.dart';
 import '../deposit/deposit_page.dart';
-import '../services/airtime/buy_airtime_view.dart';
-import '../services/StandingOrder/home/standing_order_home_view.dart';
-import '../services/menu_services/menu_services_view.dart';
+import '../payments/airtime/buy_airtime_view.dart';
+import '../payments/StandingOrder/home/standing_order_home_view.dart';
+import '../payments/menu_services/menu_services_view.dart';
 
 // Transaction Item Widget
 class _TransactionItem extends StatelessWidget {
@@ -124,26 +124,6 @@ class _HomeViewState extends State<HomeView> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
-  }
-
-  void _goToPreviousPage() {
-    if (_currentPage > 0) {
-      _pageController.animateToPage(
-        _currentPage - 1,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  void _goToNextPage() {
-    if (_currentPage < 2) {
-      _pageController.animateToPage(
-        _currentPage + 1,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
   }
 
   @override
@@ -264,124 +244,92 @@ class _HomeViewState extends State<HomeView> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // Account Cards Carousel with Navigation Arrows
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Previous Arrow
-                        IconButton(
-                          onPressed: _currentPage > 0
-                              ? _goToPreviousPage
-                              : null,
-                          icon: Icon(
-                            Icons.chevron_left,
-                            color: _currentPage > 0
-                                ? primary
-                                : Colors.grey[400],
-                            size: 32,
-                          ),
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                        // PageView
-                        Expanded(
-                          child: SizedBox(
-                            height: 220,
-                            child: PageView(
-                              controller: _pageController,
-                              onPageChanged: (page) {
+                    // Account Cards Carousel with Swipe Support
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 160,
+                        child: PageView(
+                          controller: _pageController,
+                          onPageChanged: (page) {
+                            setState(() {
+                              _currentPage = page;
+                            });
+                          },
+                          children: [
+                            _AccountCard(
+                              accountType: 'Main Account',
+                              accountNumber: '123456789',
+                              balance: '145,200.50',
+                              currency: 'KES',
+                              gradientColors: isDark
+                                  ? [
+                                      const Color(0xFF1A3A1A),
+                                      const Color(0xFF0D1F0D),
+                                    ]
+                                  : [
+                                      const Color(0xFFE8F5E8),
+                                      const Color(0xFFF0FFF0),
+                                    ],
+                              cardDark: cardDark,
+                              primary: primary,
+                              balanceVisible: _balanceVisible,
+                              onVisibilityToggle: () {
                                 setState(() {
-                                  _currentPage = page;
+                                  _balanceVisible = !_balanceVisible;
                                 });
                               },
-                              children: [
-                                _AccountCard(
-                                  accountType: 'Main Account',
-                                  accountNumber: '123456789',
-                                  balance: '145,200.50',
-                                  currency: 'KES',
-                                  gradientColors: isDark
-                                      ? [
-                                          const Color(0xFF1A3A1A),
-                                          const Color(0xFF0D1F0D),
-                                        ]
-                                      : [
-                                          const Color(0xFFE8F5E8),
-                                          const Color(0xFFF0FFF0),
-                                        ],
-                                  cardDark: cardDark,
-                                  primary: primary,
-                                  balanceVisible: _balanceVisible,
-                                  onVisibilityToggle: () {
-                                    setState(() {
-                                      _balanceVisible = !_balanceVisible;
-                                    });
-                                  },
-                                ),
-                                _AccountCard(
-                                  accountType: 'Savings Account',
-                                  accountNumber: '987654321',
-                                  balance: '52,800.00',
-                                  currency: 'KES',
-                                  gradientColors: isDark
-                                      ? [
-                                          const Color(0xFF1A2A3A),
-                                          const Color(0xFF0D1520),
-                                        ]
-                                      : [
-                                          const Color(0xFFE5F0F5),
-                                          const Color(0xFFF0F8FF),
-                                        ],
-                                  cardDark: cardDark,
-                                  primary: const Color(0xFF2196F3),
-                                  balanceVisible: _balanceVisible,
-                                  onVisibilityToggle: () {
-                                    setState(() {
-                                      _balanceVisible = !_balanceVisible;
-                                    });
-                                  },
-                                ),
-                                _AccountCard(
-                                  accountType: 'Fixed Deposit',
-                                  accountNumber: '456789123',
-                                  balance: '500,000.00',
-                                  currency: 'KES',
-                                  gradientColors: isDark
-                                      ? [
-                                          const Color(0xFF3A2A1A),
-                                          const Color(0xFF201510),
-                                        ]
-                                      : [
-                                          const Color(0xFFFFF5E5),
-                                          const Color(0xFFFFF8F0),
-                                        ],
-                                  cardDark: cardDark,
-                                  primary: const Color(0xFFFF9800),
-                                  balanceVisible: _balanceVisible,
-                                  onVisibilityToggle: () {
-                                    setState(() {
-                                      _balanceVisible = !_balanceVisible;
-                                    });
-                                  },
-                                ),
-                              ],
                             ),
-                          ),
+                            _AccountCard(
+                              accountType: 'Savings Account',
+                              accountNumber: '987654321',
+                              balance: '52,800.00',
+                              currency: 'KES',
+                              gradientColors: isDark
+                                  ? [
+                                      const Color(0xFF1A2A3A),
+                                      const Color(0xFF0D1520),
+                                    ]
+                                  : [
+                                      const Color(0xFFE5F0F5),
+                                      const Color(0xFFF0F8FF),
+                                    ],
+                              cardDark: cardDark,
+                              primary: const Color(0xFF2196F3),
+                              balanceVisible: _balanceVisible,
+                              onVisibilityToggle: () {
+                                setState(() {
+                                  _balanceVisible = !_balanceVisible;
+                                });
+                              },
+                            ),
+                            _AccountCard(
+                              accountType: 'Fixed Deposit',
+                              accountNumber: '456789123',
+                              balance: '500,000.00',
+                              currency: 'KES',
+                              gradientColors: isDark
+                                  ? [
+                                      const Color(0xFF3A2A1A),
+                                      const Color(0xFF201510),
+                                    ]
+                                  : [
+                                      const Color(0xFFFFF5E5),
+                                      const Color(0xFFFFF8F0),
+                                    ],
+                              cardDark: cardDark,
+                              primary: const Color(0xFFFF9800),
+                              balanceVisible: _balanceVisible,
+                              onVisibilityToggle: () {
+                                setState(() {
+                                  _balanceVisible = !_balanceVisible;
+                                });
+                              },
+                            ),
+                          ],
                         ),
-                        // Next Arrow
-                        IconButton(
-                          onPressed: _currentPage < 2 ? _goToNextPage : null,
-                          icon: Icon(
-                            Icons.chevron_right,
-                            color: _currentPage < 2
-                                ? primary
-                                : Colors.grey[400],
-                            size: 32,
-                          ),
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                      ],
+                      ),
                     ),
 
                     // Page Indicator
@@ -602,7 +550,7 @@ class _HomeViewState extends State<HomeView> {
   }
 }
 
-// Account Card Widget for Carousel
+// Account Card Widget for Carousel - Simplified for Swipe Navigation
 class _AccountCard extends StatelessWidget {
   final String accountType;
   final String accountNumber;
@@ -632,7 +580,7 @@ class _AccountCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -675,7 +623,7 @@ class _AccountCard extends StatelessWidget {
           ),
           // Content
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -684,40 +632,44 @@ class _AccountCard extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
+                        horizontal: 8,
+                        vertical: 4,
                       ),
                       decoration: BoxDecoration(
                         color: primary.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.credit_card, color: primary, size: 14),
+                          Icon(Icons.credit_card, color: primary, size: 12),
                           const SizedBox(width: 4),
                           Text(
                             accountType,
                             style: TextStyle(
                               fontFamily: AppTypography.fontFamily,
                               fontWeight: FontWeight.w600,
-                              fontSize: 11,
+                              fontSize: 10,
                               color: primary,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Icon(Icons.more_vert, color: cardDark.withOpacity(0.5)),
+                    Icon(
+                      Icons.more_vert,
+                      color: cardDark.withOpacity(0.5),
+                      size: 16,
+                    ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
                 Text(
                   'Account Number',
                   style: TextStyle(
                     fontFamily: AppTypography.fontFamily,
                     fontWeight: AppTypography.medium,
-                    fontSize: 11,
+                    fontSize: 9,
                     color: cardDark.withOpacity(0.6),
                   ),
                 ),
@@ -726,12 +678,12 @@ class _AccountCard extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: AppTypography.fontFamily,
                     fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                    fontSize: 13,
                     color: cardDark,
                     letterSpacing: 1.5,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -740,17 +692,17 @@ class _AccountCard extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: AppTypography.fontFamily,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 14,
                         color: cardDark.withOpacity(0.7),
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: 4),
                     Text(
                       balanceVisible ? balance : '••••••',
                       style: TextStyle(
                         fontFamily: AppTypography.fontFamily,
                         fontWeight: FontWeight.bold,
-                        fontSize: 26,
+                        fontSize: 22,
                         color: cardDark,
                         letterSpacing: -0.5,
                       ),
@@ -762,7 +714,7 @@ class _AccountCard extends StatelessWidget {
                             ? Icons.visibility
                             : Icons.visibility_off,
                         color: cardDark.withOpacity(0.4),
-                        size: 22,
+                        size: 18,
                       ),
                       onPressed: onVisibilityToggle,
                       padding: EdgeInsets.zero,

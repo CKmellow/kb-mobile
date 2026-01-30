@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/typography.dart';
 import '../../../core/constants/colors.dart';
-import '../../services/pay/kenya_power/kenya_power_view.dart';
-import '../../services/pay/tv_payment/tv_payment_view.dart';
-import '../../services/pay/kra_payment/kra_payment_view.dart';
-import '../../services/pay/school_fees/school_fees_view.dart';
+import '../../payments/pay/kenya_power/kenya_power_view.dart';
+import '../../payments/pay/tv_payment/tv_payment_view.dart';
+import '../../payments/pay/kra_payment/kra_payment_view.dart';
+import '../../payments/pay/school_fees/school_fees_view.dart';
 
 class PayBillsPage extends StatelessWidget {
   const PayBillsPage({Key? key}) : super(key: key);

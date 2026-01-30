@@ -119,24 +119,24 @@ class StandingOrderHomeView extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        color: isDark ? const Color(0xFF111811) : Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            _NavBarItem(icon: Icons.home, label: 'Home'),
-            _NavBarItem(icon: Icons.payments, label: 'Payments'),
-            _NavBarItem(icon: Icons.sync_alt, label: 'Transfers'),
-            _NavBarItem(
-              icon: Icons.history_toggle_off,
-              label: 'Orders',
-              selected: true,
-            ),
-            _NavBarItem(icon: Icons.account_circle, label: 'Profile'),
-          ],
-        ),
-      ),
+      // bottomNavigationBar: Container(
+      //   color: isDark ? const Color(0xFF111811) : Colors.white,
+      //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //     children: const [
+      //       _NavBarItem(icon: Icons.home, label: 'Home'),
+      //       _NavBarItem(icon: Icons.payments, label: 'Payments'),
+      //       _NavBarItem(icon: Icons.sync_alt, label: 'Transfers'),
+      //       _NavBarItem(
+      //         icon: Icons.history_toggle_off,
+      //         label: 'Orders',
+      //         selected: true,
+      //       ),
+      //       _NavBarItem(icon: Icons.account_circle, label: 'Profile'),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

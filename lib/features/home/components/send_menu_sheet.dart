@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/typography.dart';
 import '../../../core/constants/colors.dart';
-import '../../services/send/send_money/send_money_view.dart';
-import '../../services/send/pesalink/send_via_pesalink_view.dart';
-import '../../services/send/own_account/send_to_own_account_view.dart';
+import '../../payments/send/send_money/send_money_view.dart';
+import '../../payments/send/pesalink/send_via_pesalink_view.dart';
+import '../../payments/send/own_account/send_to_own_account_view.dart';
 
 class SendMenuSheet extends StatelessWidget {
   const SendMenuSheet({Key? key}) : super(key: key);
